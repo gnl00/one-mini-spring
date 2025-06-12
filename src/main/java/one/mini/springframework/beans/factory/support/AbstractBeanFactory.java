@@ -1,7 +1,7 @@
 package one.mini.springframework.beans.factory.support;
 
 import one.mini.springframework.beans.factory.BeanFactory;
-import one.mini.springframework.beans.factory.factory.BeanDefinition;
+import one.mini.springframework.beans.factory.config.BeanDefinition;
 
 /**
  * AbstractBeanFactory 继承了 DefaultSingletonBeanRegistry，也就具备了使用单例注册类方法

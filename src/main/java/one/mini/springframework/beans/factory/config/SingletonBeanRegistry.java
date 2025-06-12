@@ -1,4 +1,4 @@
-package one.mini.springframework.beans.factory.factory;
+package one.mini.springframework.beans.factory.config;
 
 public interface SingletonBeanRegistry {
 

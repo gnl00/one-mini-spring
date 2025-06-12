@@ -3,7 +3,7 @@ package one.mini.springframework.beans.factory.support;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.NoOp;
 import one.mini.springframework.beans.BeansException;
-import one.mini.springframework.beans.factory.factory.BeanDefinition;
+import one.mini.springframework.beans.factory.config.BeanDefinition;
 
 import java.lang.reflect.Constructor;
 

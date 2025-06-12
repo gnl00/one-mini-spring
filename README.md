@@ -126,7 +126,31 @@ class CglibSubclassingInstantiationStrategy implements InstantiationStrategy{
 
 现在，无论参与有无，我们都能正常根据构造方法创建出需要的对象实例了。但是少了点东西：对象的参数。
 
-应该在什么时候将参数填充到 bean 实例对象中？当然是创建完成之后，也就是 createBean 方法中在 bean 实例创建完成之后。我们可以学习 spring，定义一个 populateBean 方法。
+应该在什么时候将参数填充到 bean 实例对象中？当然是创建完成之后，也就是 createBean 方法中在 bean 实例创建完成之后。我们可以学习 spring，定义一个 applyPropertyValues 方法。
+
+> 对于属性的填充不只是 int、Long、String，还包括还没有实例化的对象属性，都需要在 Bean 创建时进行填充操作。
+
+```java
+protected void applyPropertyValues(String beanName, Object bean, BeanDefinition beanDefinition) {
+    try {
+        PropertyValues propertyValues = beanDefinition.getPropertyValues();
+        for (PropertyValue propertyValue : propertyValues.getPropertyValues()) {
+            String name = propertyValue.getName();
+            Object value = propertyValue.getValue();
+            // A 依赖 B，获取 B 的实例
+            if (value instanceof BeanReference beanReference) {
+                value = getBean(beanReference.getBeanName());
+            }
+            // 填充 bean 属性
+            BeanUtil.setFieldValue(bean, name, value);
+        }
+    } catch (Exception e) {
+        throw new BeansException("Error setting property values：" + beanName);
+    }
+}
+```
+
+到这里 Bean 的创建算是完成了。
 
 ## References
 

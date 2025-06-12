@@ -1,6 +1,6 @@
 package one.mini.springframework.beans.factory.support;
 
-import one.mini.springframework.beans.factory.factory.SingletonBeanRegistry;
+import one.mini.springframework.beans.factory.config.SingletonBeanRegistry;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
