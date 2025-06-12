@@ -29,11 +29,10 @@ class BeanFactoryTest {
     @Test
     public void testGetBean() {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
-        // beanFactory.registerBeanDefinition("userService", new BeanDefinition(UserService.class));
-        beanFactory.registerBeanDefinition("userService", new BeanDefinition(UserService.class, new Object[]{"zhangsan"}));
+        beanFactory.registerBeanDefinition("userService", new BeanDefinition(UserService.class));
 
         // first get bean
-        UserService userService = (UserService) beanFactory.getBean("userService");
+        UserService userService = (UserService) beanFactory.getBean("userService", "zhangsan");
         // second get bean from singleton
         UserService userServiceSingleton = (UserService) beanFactory.getBean("userService");
         Assertions.assertNotNull(userService);

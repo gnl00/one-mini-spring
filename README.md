@@ -83,6 +83,51 @@ abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
 
 之前的代码中，我们取巧，创建对象时使用的是无参构造器。如果需要从一个有参构造器创建对象，如何修改？
 
+```java
+interface InstantiationStrategy {
+    /**
+     * 在实例化接口 instantiate 方法中添加必要的入参信息，包括：beanDefinition、 beanName、ctor、args
+     */
+    Object instantiate(BeanDefinition beanDefinition, String beanName, Constructor<?> ctor, Object[] args) throws BeansException;
+}
+/**
+ * JDK 实例化
+ */
+class SimpleInstantiationStrategy implements InstantiationStrategy {
+    @Override
+    public Object instantiate(BeanDefinition beanDefinition, String beanName, Constructor<?> ctor, Object[] args) throws BeansException {
+        Class<?> clazz = beanDefinition.getBeanClass();
+        try {
+            if (null != ctor) {
+                return clazz.getDeclaredConstructor(ctor.getParameterTypes()).newInstance(args);
+            } else {
+                return clazz.getDeclaredConstructor().newInstance();
+            }
+        } catch (InstantiationException | RuntimeException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new BeansException("Failed to instantiate [" + clazz.getName() + "]", e);
+        }
+    }
+}
+/**
+ * Cglib 实例化
+ */
+class CglibSubclassingInstantiationStrategy implements InstantiationStrategy{
+    @Override
+    public Object instantiate(BeanDefinition beanDefinition, String beanName, Constructor<?> ctor, Object[] args) throws BeansException {
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(beanDefinition.getBeanClass());
+        enhancer.setCallback(NoOp.INSTANCE);
+        return null == ctor ? enhancer.create() : enhancer.create(ctor.getParameterTypes(), args);
+    }
+}
+```
+
+### 参数填充
+
+现在，无论参与有无，我们都能正常根据构造方法创建出需要的对象实例了。但是少了点东西：对象的参数。
+
+应该在什么时候将参数填充到 bean 实例对象中？当然是创建完成之后，也就是 createBean 方法中在 bean 实例创建完成之后。我们可以学习 spring，定义一个 populateBean 方法。
+
 ## References
 
 - https://github.com/fuzhengwei/small-spring

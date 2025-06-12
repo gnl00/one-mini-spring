@@ -9,14 +9,9 @@ public class BeanDefinition {
      * 把 Object bean 替换为 Class，这样就可以把 Bean 的实例化操作放到容器中处理了
      */
     private Class<?> beanClass;
-    private Object[] constructorArgs;
 
     public BeanDefinition(Class<?> beanClass) {
         this.beanClass = beanClass;
     }
 
-    public BeanDefinition(Class<?> beanClass, Object[] constructorArgs) {
-        this.beanClass = beanClass;
-        this.constructorArgs = constructorArgs;
-    }
 }

@@ -5,31 +5,34 @@ import one.mini.springframework.beans.BeansException;
 import one.mini.springframework.beans.factory.factory.BeanDefinition;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 @Slf4j
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
+
+    InstantiationStrategy instantiationStrategy = new CglibSubclassingInstantiationStrategy();
+
     @Override
-    protected Object createBean(String beanName, BeanDefinition beanDefinition) {
+    protected Object createBean(String beanName, BeanDefinition beanDefinition, Object...args) {
         log.info("[beans] - createBean");
         Object bean = null;
         try {
-            Constructor<?>[] constructors = beanDefinition.getBeanClass().getDeclaredConstructors();
-            for (Constructor<?> constructor : constructors) {
-                constructor.setAccessible(true);
-                // 如果传入了参数优先使用有参构造器
-                if (null != beanDefinition.getConstructorArgs() && constructor.getParameterCount() == beanDefinition.getConstructorArgs().length) {
-                    bean = constructor.newInstance(beanDefinition.getConstructorArgs());
-                }
-                // 否则调用无参构造器创建对象
-                else if (0 == constructor.getParameterCount()) {
-                    bean = constructor.newInstance();
-                }
-            }
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            bean = createBeanInstance(beanName, beanDefinition, args);
+        } catch (Exception e) {
             throw new BeansException("Instantiation of bean failed", e);
         }
         addSingleton(beanName, bean);
         return bean;
+    }
+
+    protected Object createBeanInstance(String beanName, BeanDefinition beanDefinition, Object[] args) {
+        Constructor<?> constructorToUse = null;
+        Class<?> beanClass = beanDefinition.getBeanClass();
+        for (Constructor<?> constructor : beanClass.getDeclaredConstructors()) {
+            if (constructor.getParameterTypes().length == args.length) {
+                constructorToUse = constructor;
+                break;
+            }
+        }
+        return instantiationStrategy.instantiate(beanDefinition, beanName, constructorToUse, args);
     }
 }

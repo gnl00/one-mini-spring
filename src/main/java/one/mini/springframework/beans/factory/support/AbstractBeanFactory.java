@@ -9,17 +9,19 @@ import one.mini.springframework.beans.factory.factory.BeanDefinition;
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory {
 
     @Override
-    public Object getBean(String beanName) {
+    public Object getBean(String beanName, Object...args) {
         Object bean = getSingleton(beanName);
         if (null != bean) {
             return bean;
         }
         BeanDefinition beanDefinition = getBeanDefinition(beanName);
-        return createBean(beanName, beanDefinition);
+        return createBean(beanName, beanDefinition, args);
     }
 
     protected abstract BeanDefinition getBeanDefinition(String beanName);
 
-    protected abstract Object createBean(String beanName, BeanDefinition beanDefinition);
+    /*protected abstract Object createBean(String beanName, BeanDefinition beanDefinition);*/
+
+    protected abstract Object createBean(String beanName, BeanDefinition beanDefinition, Object...args);
 
 }
