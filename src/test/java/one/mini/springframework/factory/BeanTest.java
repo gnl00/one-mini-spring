@@ -1,37 +1,45 @@
 package one.mini.springframework.factory;
 
-import lombok.Data;
-import lombok.extern.log4j.Log4j2;
+import cn.hutool.core.io.IoUtil;
+import lombok.extern.slf4j.Slf4j;
 import one.mini.springframework.beans.PropertyValue;
 import one.mini.springframework.beans.PropertyValues;
 import one.mini.springframework.beans.factory.config.BeanDefinition;
 import one.mini.springframework.beans.factory.config.BeanReference;
 import one.mini.springframework.beans.factory.support.DefaultListableBeanFactory;
+import one.mini.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import one.mini.springframework.core.io.DefaultResourceLoader;
+import one.mini.springframework.core.io.Resource;
+import one.mini.springframework.core.io.ResourceLoader;
+import one.mini.test.bean.UserDao;
+import one.mini.test.bean.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-@Log4j2
-class BeanFactoryTest {
+import java.io.IOException;
+import java.io.InputStream;
 
-    @Data
-    static class UserService {
-        private Integer id;
-        private String name;
-        private UserDao userDao;
-        public UserService() {
-        }
-        public UserService(String name) {
-            this.name = name;
-        }
-        public String getUserInfo() {
-            return userDao.queryUser(this.name, this.id);
-        }
+@Slf4j
+class BeanTest {
+
+    @Test
+    public void testBeanRegisterFromXML() {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
+        reader.loadBeanDefinitions("classpath:spring.xml");
+
+        UserService userService = (UserService) beanFactory.getBean("userService");
+        log.info(userService.getUserInfo());
     }
 
-    static class UserDao {
-        public String queryUser(String userName, Integer id) {
-            return "found user: " + userName + ", id: " + id;
-        }
+
+    @Test
+    public void testResourceLoadFromClasspath() throws IOException {
+        ResourceLoader resourceLoader = new DefaultResourceLoader();
+        Resource resource = resourceLoader.getResource("classpath:config.properties");
+        InputStream inputStream = resource.getInputStream();
+        String readUtf8 = IoUtil.readUtf8(inputStream);
+        log.info("read from stream: {}", readUtf8);
     }
 
     @Test
@@ -47,7 +55,6 @@ class BeanFactoryTest {
         beanFactory.registerBeanDefinition("userService", new BeanDefinition(UserService.class, propertyValues));
         UserService userService = (UserService) beanFactory.getBean("userService");
         log.info(userService.getUserInfo());
-
     }
 
     @Test

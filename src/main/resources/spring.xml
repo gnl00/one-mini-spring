@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+
+    <bean id="userDao" class="one.mini.test.bean.UserDao"/>
+
+    <bean id="userService" class="one.mini.test.bean.UserService">
+        <property name="id" value="10002"/>
+        <property name="name" value="lizzz"/>
+        <property name="userDao" ref="userDao"/>
+    </bean>
+
+</beans>

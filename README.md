@@ -150,7 +150,118 @@ protected void applyPropertyValues(String beanName, Object bean, BeanDefinition 
 }
 ```
 
-到这里 Bean 的创建算是完成了。
+到这里 Bean 的创建算是完成了。回顾代码，目前存在的问题是什么？
+
+```java
+DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+beanFactory.registerBeanDefinition("userDao", new BeanDefinition(UserDao.class));
+
+PropertyValues propertyValues = new PropertyValues();
+propertyValues.addPropertyValue(new PropertyValue("id", 10001));
+propertyValues.addPropertyValue(new PropertyValue("name", "zhangsan"));
+propertyValues.addPropertyValue(new PropertyValue("userDao", new BeanReference("userDao")));
+
+beanFactory.registerBeanDefinition("userService", new BeanDefinition(UserService.class, propertyValues));
+UserService userService = (UserService) beanFactory.getBean("userService");
+log.info(userService.getUserInfo());
+```
+
+在创建和和获取 Bean 的时候太麻烦了。在使用 spring 的时候是不需要手动创建的，只需要配置在 xml 文件中，spring 会帮助我们自动注册到容器中。
+
+我们配置完了之后只管获取，然后使用就行了。
+
+### 资源加载
+
+想要从 xml 中获取到配置信息，就涉及到 xml 文件的加载的解析。spring 中的资源如何加载呢？让我们来定义一个 ResourceLoader。
+
+ResourceLoader 类，包含 loadResource 方法。并且支持从 classpath/filesystem/url 中加载资源。
+
+```java
+public Resource getResource(String location) {
+    if (location.startsWith(CLASSPATH_URL_PREFIX)) {
+        return new ClassPathResource(location.substring(CLASSPATH_URL_PREFIX.length()));
+    }
+    else {
+        try {
+            return new UrlResource(URI.create(location).toURL());
+        } catch (MalformedURLException e) {
+            return new FileSystemResource(location);
+        }
+    }
+}
+```
+
+资源加载完成之后我们需要解析，以 XML 文件为例，我们使用 XmlBeanDefinitionReader 对其进行解析。
+
+```java
+protected void doLoadBeanDefinitions(InputStream inputStream) throws ClassNotFoundException {
+    Document doc = XmlUtil.readXML(inputStream);
+    Element root = doc.getDocumentElement();
+    NodeList childNodes = root.getChildNodes();
+
+    for (int i = 0; i < childNodes.getLength(); i++) {
+        // 判断元素
+        if (!(childNodes.item(i) instanceof Element)) continue;
+        // 判断对象
+        if (!"bean".equals(childNodes.item(i).getNodeName())) continue;
+
+        // 解析标签
+        Element bean = (Element) childNodes.item(i);
+        String id = bean.getAttribute("id");
+        String name = bean.getAttribute("name");
+        String className = bean.getAttribute("class");
+        // 获取 Class，方便获取类中的名称
+        Class<?> clazz = Class.forName(className);
+        // 优先级 id > name
+        String beanName = StrUtil.isNotEmpty(id) ? id : name;
+        if (StrUtil.isEmpty(beanName)) {
+            beanName = StrUtil.lowerFirst(clazz.getSimpleName());
+        }
+
+        // 定义Bean
+        BeanDefinition beanDefinition = new BeanDefinition(clazz);
+        // 读取属性并填充
+        for (int j = 0; j < bean.getChildNodes().getLength(); j++) {
+            if (!(bean.getChildNodes().item(j) instanceof Element property)) continue;
+            if (!"property".equals(bean.getChildNodes().item(j).getNodeName())) continue;
+            // 解析标签：property
+            String attrName = property.getAttribute("name");
+            String attrValue = property.getAttribute("value");
+            String attrRef = property.getAttribute("ref");
+            // 获取属性值：引入对象、值对象
+            Object value = StrUtil.isNotEmpty(attrRef) ? new BeanReference(attrRef) : attrValue;
+            // 创建属性信息
+            PropertyValue propertyValue = new PropertyValue(attrName, value);
+            beanDefinition.getPropertyValues().addPropertyValue(propertyValue);
+        }
+        if (getRegistry().containsBeanDefinition(beanName)) {
+            throw new BeansException("Duplicate beanName[" + beanName + "] is not allowed");
+        }
+        // 注册 BeanDefinition
+        getRegistry().registerBeanDefinition(beanName, beanDefinition);
+    }
+}
+```
+
+如果是注解开发，则利用 AnnotatedBeanDefinitionReader 来解析类信息
+
+```java
+public void register(Class<?>... componentClasses) {
+    for (Class<?> componentClass : componentClasses) {
+        registerBean(componentClass);
+    }
+}
+
+public void registerBean(Class<?> beanClass) {
+    doRegisterBean(beanClass, null, null, null);
+}
+
+private <T> void doRegisterBean(Class<T> beanClass, String beanName,
+                                Class<? extends Annotation>[] qualifiers, 
+                                Object[] customizers) {
+    // ...
+}
+```
 
 ## References
 
