@@ -283,6 +283,31 @@ BeanPostProcessor，也是 Spring 提供的扩展机制，不过 BeanPostProcess
 
 主要依靠 InitializingBean 和 DisposableBean 来实现，逻辑比较简单。在对应的位置插入实现即可。
 
+### 监听容器生命周期
+
+现在 Bean 能创建了，但是我们希望在容器启动时，可以做一些事情，比如扩展容器操作，监听容器生命周期，或者监听容器事件等等。
+
+这就需要框架能提供一种能感知容器操作的接口，如果谁实现了这样的一个接口，就可以获取接口入参中的各类能力。
+
+我们需要定义一个标记性的 Aware 接口，这个接口不需要有方法，它只起到标记作用就可以，而具体的功能由继承此接口的其他功能性接口定义具体方法
+
+```java
+private Object initializeBean(String beanName, Object bean, BeanDefinition beanDefinition) throws Exception {
+    // invokeAwareMethods
+    if (bean instanceof Aware) {
+        if (bean instanceof BeanFactoryAware) {
+            ((BeanFactoryAware) bean).setBeanFactory(this);
+        }
+        if (bean instanceof BeanClassLoaderAware){
+            ((BeanClassLoaderAware) bean).setBeanClassLoader(getBeanClassLoader());
+        }
+        if (bean instanceof BeanNameAware) {
+            ((BeanNameAware) bean).setBeanName(beanName);
+        }
+    }
+}
+```
+
 ## References
 
 - https://github.com/fuzhengwei/small-spring

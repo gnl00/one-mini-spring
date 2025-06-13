@@ -5,6 +5,7 @@ import one.mini.springframework.beans.factory.HierarchicalBeanFactory;
 import one.mini.springframework.beans.factory.config.BeanDefinition;
 import one.mini.springframework.beans.factory.config.BeanPostProcessor;
 import one.mini.springframework.beans.factory.config.ConfigurableBeanFactory;
+import one.mini.springframework.util.ClassUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,9 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
 
     /** BeanPostProcessors to apply in createBean */
     private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
+
+    /** ClassLoader to resolve bean class names with, if necessary */
+    private final ClassLoader beanClassLoader = ClassUtils.getDefaultClassLoader();
 
     @Override
     public Object getBean(String beanName) throws BeansException {
@@ -58,5 +62,9 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
      */
     public List<BeanPostProcessor> getBeanPostProcessors() {
         return this.beanPostProcessors;
+    }
+
+    public ClassLoader getBeanClassLoader() {
+        return this.beanClassLoader;
     }
 }
