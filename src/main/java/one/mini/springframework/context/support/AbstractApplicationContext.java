@@ -1,5 +1,6 @@
 package one.mini.springframework.context.support;
 
+import lombok.extern.slf4j.Slf4j;
 import one.mini.springframework.beans.BeansException;
 import one.mini.springframework.beans.factory.ConfigurableListableBeanFactory;
 import one.mini.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -12,6 +13,7 @@ import java.util.Map;
 /**
  * AbstractApplicationContext 继承 DefaultResourceLoader 是为了处理 spring.xml 配置资源的加载。
  */
+@Slf4j
 public abstract class AbstractApplicationContext extends DefaultResourceLoader implements ConfigurableApplicationContext {
     @Override
     public void refresh() throws BeansException {
@@ -29,6 +31,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
 
         // 5. 提前实例化单例Bean对象
         beanFactory.preInstantiateSingletons();
+
+        registerShutdownHook();
     }
 
     protected abstract void refreshBeanFactory() throws BeansException;
@@ -72,5 +76,16 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     @Override
     public <T> T getBean(String name, Class<T> requiredType) throws BeansException {
         return getBeanFactory().getBean(name, requiredType);
+    }
+
+    @Override
+    public void registerShutdownHook() {
+        log.info("[context] - shutdown hook registered");
+        Runtime.getRuntime().addShutdownHook(new Thread(this::close));
+    }
+
+    @Override
+    public void close() {
+        getBeanFactory().destroySingletons();
     }
 }

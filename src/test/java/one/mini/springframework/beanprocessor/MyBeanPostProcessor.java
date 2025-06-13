@@ -1,4 +1,4 @@
-package one.mini.test.bean;
+package one.mini.springframework.beanprocessor;
 
 import lombok.extern.slf4j.Slf4j;
 import one.mini.springframework.beans.BeansException;

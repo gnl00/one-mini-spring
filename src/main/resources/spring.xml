@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
 
-    <bean id="userDao" class="one.mini.test.bean.UserDao"/>
+    <bean id="userDao" init-method="daoInit" class="one.mini.springframework.bean.UserDao"/>
 
-    <bean id="userService" class="one.mini.test.bean.UserService">
+    <bean id="userService" class="one.mini.springframework.bean.UserService">
         <property name="id" value="10002"/>
         <property name="name" value="lizzz"/>
         <property name="userDao" ref="userDao"/>
     </bean>
 
-    <bean id="myBeanFactoryPostProcessor" class="one.mini.test.bean.MyBeanFactoryPostProcessor">
+    <bean id="myBeanFactoryPostProcessor" class="one.mini.springframework.beanprocessor.MyBeanFactoryPostProcessor">
     </bean>
 
-    <bean id="myBeanPostProcessor" class="one.mini.test.bean.MyBeanPostProcessor">
+    <bean id="myBeanPostProcessor" class="one.mini.springframework.beanprocessor.MyBeanPostProcessor">
     </bean>
 
 </beans>

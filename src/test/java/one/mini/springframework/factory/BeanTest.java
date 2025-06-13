@@ -12,10 +12,10 @@ import one.mini.springframework.context.support.ClassPathXmlApplicationContext;
 import one.mini.springframework.core.io.DefaultResourceLoader;
 import one.mini.springframework.core.io.Resource;
 import one.mini.springframework.core.io.ResourceLoader;
-import one.mini.test.bean.MyBeanFactoryPostProcessor;
-import one.mini.test.bean.MyBeanPostProcessor;
-import one.mini.test.bean.UserDao;
-import one.mini.test.bean.UserService;
+import one.mini.springframework.beanprocessor.MyBeanFactoryPostProcessor;
+import one.mini.springframework.beanprocessor.MyBeanPostProcessor;
+import one.mini.springframework.bean.UserDao;
+import one.mini.springframework.bean.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package one.mini.test.bean;
+package one.mini.springframework.beanprocessor;
 
 import one.mini.springframework.beans.BeansException;
 import one.mini.springframework.beans.PropertyValue;

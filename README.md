@@ -279,6 +279,9 @@ BeanPostProcessor，也是 Spring 提供的扩展机制，不过 BeanPostProcess
 
 将这样一套流程暴露出去给开发者使用肯定是比较麻烦的，我们就需要考虑将这两部封装起来，提供一种更好的使用方式。于是就来到 ApplicationContext。
 
+### 完善Bean生命周期
+
+主要依靠 InitializingBean 和 DisposableBean 来实现，逻辑比较简单。在对应的位置插入实现即可。
 
 ## References
 
