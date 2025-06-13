@@ -263,6 +263,16 @@ private <T> void doRegisterBean(Class<T> beanClass, String beanName,
 }
 ```
 
+### Bean信息修改
+
+上面我们完成了 Bean 的配置与自动注册。相比之前的代码来说没那么麻烦了，但是问题在于，我们通过 XML 文件进行配置，如果要修改 Bean 的信息，比如添加属性，或者修改属性的值，那么我们只能修改 XML 文件。
+
+如何不通过 XML 修改 Bean 信息？Spring 中满足于对 Bean 对象扩展的两个接口，其实也是 Spring 框架中非常具有重量级的两个接口：BeanFactoryPostProcess 和 BeanPostProcessor
+
+BeanFactoryPostProcessor，是由 Spring 框架组建提供的容器扩展机制，允许在 Bean 对象注册后但未实例化之前，对 Bean 的定义信息 BeanDefinition 执行修改操作。
+
+BeanPostProcessor，也是 Spring 提供的扩展机制，不过 BeanPostProcessor 是在 Bean 对象实例化之后修改 Bean 对象，也可以替换 Bean 对象。
+
 ## References
 
 - https://github.com/fuzhengwei/small-spring

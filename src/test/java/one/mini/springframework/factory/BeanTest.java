@@ -11,6 +11,8 @@ import one.mini.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import one.mini.springframework.core.io.DefaultResourceLoader;
 import one.mini.springframework.core.io.Resource;
 import one.mini.springframework.core.io.ResourceLoader;
+import one.mini.test.bean.MyBeanFactoryPostProcessor;
+import one.mini.test.bean.MyBeanPostProcessor;
 import one.mini.test.bean.UserDao;
 import one.mini.test.bean.UserService;
 import org.junit.jupiter.api.Assertions;
@@ -21,6 +23,22 @@ import java.io.InputStream;
 
 @Slf4j
 class BeanTest {
+
+    @Test
+    public void testBeanPostProcessor() {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
+        reader.loadBeanDefinitions("classpath:spring.xml");
+
+        MyBeanFactoryPostProcessor myBeanFactoryPostProcessor = new MyBeanFactoryPostProcessor();
+        myBeanFactoryPostProcessor.postProcessBeanFactory(beanFactory);
+
+        MyBeanPostProcessor myBeanPostProcessor = new MyBeanPostProcessor();
+        beanFactory.addBeanPostProcessor(myBeanPostProcessor);
+
+        UserService userService = (UserService) beanFactory.getBean("userService");
+        log.info(userService.getUserInfo());
+    }
 
     @Test
     public void testBeanRegisterFromXML() {
