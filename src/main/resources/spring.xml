@@ -9,4 +9,10 @@
         <property name="userDao" ref="userDao"/>
     </bean>
 
+    <bean id="myBeanFactoryPostProcessor" class="one.mini.test.bean.MyBeanFactoryPostProcessor">
+    </bean>
+
+    <bean id="myBeanPostProcessor" class="one.mini.test.bean.MyBeanPostProcessor">
+    </bean>
+
 </beans>

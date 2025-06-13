@@ -273,6 +273,13 @@ BeanFactoryPostProcessor，是由 Spring 框架组建提供的容器扩展机制
 
 BeanPostProcessor，也是 Spring 提供的扩展机制，不过 BeanPostProcessor 是在 Bean 对象实例化之后修改 Bean 对象，也可以替换 Bean 对象。
 
+### 添加容器上下文
+
+目前我们关于 Bean 的操作都放在 DefaultListableBeanFactory，每次创建和获取 Bean 都是直接调用 DefaultListableBeanFactory 的方法。需要手动创建 bean 工厂和扫描累路径，加载 Bean。
+
+将这样一套流程暴露出去给开发者使用肯定是比较麻烦的，我们就需要考虑将这两部封装起来，提供一种更好的使用方式。于是就来到 ApplicationContext。
+
+
 ## References
 
 - https://github.com/fuzhengwei/small-spring

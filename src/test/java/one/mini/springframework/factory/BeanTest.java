@@ -8,6 +8,7 @@ import one.mini.springframework.beans.factory.config.BeanDefinition;
 import one.mini.springframework.beans.factory.config.BeanReference;
 import one.mini.springframework.beans.factory.support.DefaultListableBeanFactory;
 import one.mini.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import one.mini.springframework.context.support.ClassPathXmlApplicationContext;
 import one.mini.springframework.core.io.DefaultResourceLoader;
 import one.mini.springframework.core.io.Resource;
 import one.mini.springframework.core.io.ResourceLoader;
@@ -23,6 +24,13 @@ import java.io.InputStream;
 
 @Slf4j
 class BeanTest {
+
+    @Test
+    public void testApplicationContext() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+        applicationContext.getBean("userService");
+        applicationContext.getBeansOfType(UserService.class);
+    }
 
     @Test
     public void testBeanPostProcessor() {
