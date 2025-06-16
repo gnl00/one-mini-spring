@@ -3,6 +3,7 @@
 
     <bean id="userDao" init-method="daoInit" class="one.mini.springframework.bean.UserDao"/>
 
+    <bean id="myUserDao" class="one.mini.springframework.bean.MyUserDaoFactoryBean"/>
 
     <bean id="userServiceProto" class="one.mini.springframework.bean.UserService" scope="prototype">
         <property name="id" value="10003"/>
@@ -13,7 +14,7 @@
     <bean id="userService" class="one.mini.springframework.bean.UserService">
         <property name="id" value="10002"/>
         <property name="name" value="lizzz"/>
-        <property name="userDao" ref="userDao"/>
+        <property name="userDao" ref="myUserDao"/>
     </bean>
 
     <bean id="myBeanFactoryPostProcessor" class="one.mini.springframework.beanprocessor.MyBeanFactoryPostProcessor">
