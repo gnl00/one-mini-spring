@@ -1,4 +1,4 @@
-package one.mini.springframework.factory;
+package one.mini.springframework.test;
 
 import cn.hutool.core.io.IoUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +30,14 @@ class BeanTest {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
         applicationContext.getBean("userService");
         applicationContext.getBeansOfType(UserService.class);
+    }
+
+    @Test
+    public void testBeanScope() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+        UserService userServiceProto = (UserService) applicationContext.getBean("userServiceProto");
+        UserService userServiceProto2 = (UserService) applicationContext.getBean("userServiceProto");
+        Assertions.assertFalse(userServiceProto == userServiceProto2);
     }
 
     @Test

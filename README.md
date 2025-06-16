@@ -308,6 +308,21 @@ private Object initializeBean(String beanName, Object bean, BeanDefinition beanD
 }
 ```
 
+### Bean 作用域
+
+之前创建的 Bean 都是单例的，单例模式下，Spring 容器中只会存在一个实例。接下来加入原型 bean 的支持。
+
+定义一个工厂 Bean 来根据不同的 scope 来创建 Bean。
+
+```java
+public interface FactoryBean<T> {
+    T getObject() throws Exception;
+    Class<?> getObjectType();
+    boolean isSingleton();
+}
+```
+
 ## References
 
+- https://github.com/DerekYRC/mini-spring
 - https://github.com/fuzhengwei/small-spring
