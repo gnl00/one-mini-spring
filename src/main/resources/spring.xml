@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
 
+    <bean class="one.mini.springframework.event.CustomEventListener"/>
+
     <bean id="userDao" init-method="daoInit" class="one.mini.springframework.bean.UserDao"/>
 
     <bean id="myUserDao" class="one.mini.springframework.bean.MyUserDaoFactoryBean"/>

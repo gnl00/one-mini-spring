@@ -328,6 +328,10 @@ FactoryBean 是一种特殊的 bean，当向容器获取该 bean 时，容器不
 
 实现逻辑：当容器发现 bean 为 FactoryBean 类型时，调用其 getObject 方法返回最终 bean。当 FactoryBean#isSingleton==true，将最终 bean 放进单例缓存中，下次从缓存中获取。
 
+### 事件监听器
+
+Spring 容器在初始化过程中的某些阶段会发布对应的时间事件，通知所有监听器，并执行监听器中的方法。事件发布者，事件，事件监听器实际上就是一个观察者模式的具体实现。
+
 ## References
 
 - https://github.com/DerekYRC/mini-spring

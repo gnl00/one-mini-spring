@@ -3,7 +3,7 @@ package one.mini.springframework.bean;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import one.mini.springframework.beans.BeansException;
-import one.mini.springframework.beans.factory.ApplicationContextAware;
+import one.mini.springframework.context.ApplicationContextAware;
 import one.mini.springframework.beans.factory.BeanClassLoaderAware;
 import one.mini.springframework.beans.factory.BeanFactory;
 import one.mini.springframework.beans.factory.BeanFactoryAware;

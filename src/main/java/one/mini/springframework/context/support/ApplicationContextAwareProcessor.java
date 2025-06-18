@@ -1,7 +1,7 @@
 package one.mini.springframework.context.support;
 
 import one.mini.springframework.beans.BeansException;
-import one.mini.springframework.beans.factory.ApplicationContextAware;
+import one.mini.springframework.context.ApplicationContextAware;
 import one.mini.springframework.beans.factory.config.BeanPostProcessor;
 import one.mini.springframework.context.ApplicationContext;
 

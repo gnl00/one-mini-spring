@@ -16,6 +16,7 @@ import one.mini.springframework.beanprocessor.MyBeanFactoryPostProcessor;
 import one.mini.springframework.beanprocessor.MyBeanPostProcessor;
 import one.mini.springframework.bean.UserDao;
 import one.mini.springframework.bean.UserService;
+import one.mini.springframework.event.CustomEvent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -24,6 +25,12 @@ import java.io.InputStream;
 
 @Slf4j
 class BeanTest {
+
+    @Test
+    public void testEvent() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
+        applicationContext.publishEvent(new CustomEvent(applicationContext, 10001L, "a new event arrival"));
+    }
 
     @Test
     public void testApplicationContext() {
