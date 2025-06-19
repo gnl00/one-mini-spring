@@ -1,7 +1,14 @@
-package one.mini.springframework.test;
+package one.mini.springframework;
 
 import cn.hutool.core.io.IoUtil;
 import lombok.extern.slf4j.Slf4j;
+import one.mini.springframework.aop.AdvisedSupport;
+import one.mini.springframework.aop.TargetSource;
+import one.mini.springframework.aop.UserServiceInterceptor;
+import one.mini.springframework.aop.aspectj.AspectJExpressionPointcut;
+import one.mini.springframework.aop.framework.Cglib2AopProxy;
+import one.mini.springframework.aop.framework.JdkDynamicAopProxy;
+import one.mini.springframework.bean.IUserService;
 import one.mini.springframework.beans.PropertyValue;
 import one.mini.springframework.beans.PropertyValues;
 import one.mini.springframework.beans.factory.config.BeanDefinition;
@@ -22,9 +29,39 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 
 @Slf4j
-class BeanTest {
+class MainTest {
+
+    @Test
+    public void testDynamicProxy() {
+        // 目标对象
+        IUserService userService = new UserService();
+
+        // 组装代理信息
+        AdvisedSupport advisedSupport = new AdvisedSupport();
+        advisedSupport.setMethodInterceptor(new UserServiceInterceptor());
+        advisedSupport.setTargetSource(new TargetSource(userService));
+        advisedSupport.setMethodMatcher(new AspectJExpressionPointcut("execution(* one.mini.springframework.bean.IUserService.*(..))"));
+
+        JdkDynamicAopProxy jdkDynamicAopProxy = new JdkDynamicAopProxy(advisedSupport);
+        IUserService proxy = (IUserService) jdkDynamicAopProxy.getProxy();
+        System.out.println(proxy.queryAll());
+
+        Cglib2AopProxy cglib2AopProxy = new Cglib2AopProxy(advisedSupport);
+        IUserService cglib2AopProxyProxy = (IUserService) cglib2AopProxy.getProxy();
+        System.out.println(cglib2AopProxyProxy.queryAll());
+    }
+
+    @Test
+    public void testPointcut() throws NoSuchMethodException {
+        AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut("execution(* one.mini.springframework.bean.UserService.*(..))");
+        System.out.println(pointcut.matches(UserService.class));
+        Class<?> clazz = UserService.class;
+        Method method = clazz.getDeclaredMethod("getUserInfo");
+        System.out.println(pointcut.matches(method, UserService.class));
+    }
 
     @Test
     public void testEvent() {

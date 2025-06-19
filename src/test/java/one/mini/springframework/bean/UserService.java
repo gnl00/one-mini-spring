@@ -14,15 +14,13 @@ import one.mini.springframework.context.ApplicationContext;
 
 @Slf4j
 @Data
-public class UserService implements InitializingBean, DisposableBean
+public class UserService implements IUserService, InitializingBean, DisposableBean
         , BeanNameAware, BeanClassLoaderAware, ApplicationContextAware, BeanFactoryAware {
     private Integer id;
     private String name;
     private UserDao userDao;
     public UserService() {}
-    public UserService(String name) {
-        this.name = name;
-    }
+
     public String getUserInfo() {
         return userDao.queryUser(this.name, this.id);
     }
@@ -55,5 +53,10 @@ public class UserService implements InitializingBean, DisposableBean
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         log.info("[#] - UserService beanFactory: {}", beanFactory);
+    }
+
+    @Override
+    public String queryAll() {
+        return "queryAll()\n";
     }
 }
