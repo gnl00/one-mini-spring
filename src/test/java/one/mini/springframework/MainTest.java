@@ -35,6 +35,13 @@ import java.lang.reflect.Method;
 class MainTest {
 
     @Test
+    public void testAOP() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring-aop.xml");
+        IUserService userService = (IUserService) applicationContext.getBean("userService");
+        System.out.println(userService.queryAll());
+    }
+
+    @Test
     public void testDynamicProxy() {
         // 目标对象
         IUserService userService = new UserService();

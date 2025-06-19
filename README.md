@@ -338,6 +338,10 @@ Spring 容器在初始化过程中的某些阶段会发布对应的时间事件�
 
 接下来实现 AOP 的核心，使用 JDK 和 CgLib 分别创建动态代理
 
+### 方法拦截器
+
+有了动态代理的支持，我们就可以在方法执行的时候织入方法切面，拦截方法执行。
+
 ## References
 
 - https://github.com/DerekYRC/mini-spring

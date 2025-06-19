@@ -57,6 +57,6 @@ public class UserService implements IUserService, InitializingBean, DisposableBe
 
     @Override
     public String queryAll() {
-        return "queryAll()\n";
+        return "\nqueryAll()\n";
     }
 }
