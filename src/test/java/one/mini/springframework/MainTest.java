@@ -35,6 +35,15 @@ import java.lang.reflect.Method;
 class MainTest {
 
     @Test
+    public void testAnnotation() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring-scan.xml");
+        IUserService userService = (IUserService) applicationContext.getBean("userServiceA");
+        IUserService userServiceT = (IUserService) applicationContext.getBean("userServiceT");
+        System.out.println(userService.queryAll());
+        System.out.println(userServiceT.queryAll());
+    }
+
+    @Test
     public void testAOP() {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring-aop.xml");
         IUserService userService = (IUserService) applicationContext.getBean("userService");

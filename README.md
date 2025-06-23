@@ -342,6 +342,10 @@ Spring 容器在初始化过程中的某些阶段会发布对应的时间事件�
 
 有了动态代理的支持，我们就可以在方法执行的时候织入方法切面，拦截方法执行。
 
+## 注解配置自动扫描
+
+创建一个 @Component 注解，用于自动扫描类，并注册 Bean。
+
 ## References
 
 - https://github.com/DerekYRC/mini-spring
